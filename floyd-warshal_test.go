@@ -4,12 +4,12 @@ import (
 	"testing"
 )
 
-const connectedness = 0.8
+const connectedness = 0.3
 
 var result [][]int
 
 var (
-	g10, g20, g50, g100, g500, g1000 *G
+	g10, g20, g50, g100, g500, g1000, g5000 *G
 )
 
 func init() {
@@ -41,6 +41,11 @@ func init() {
 	}
 
 	g1000, err = NewRandomG(1000, connectedness)
+	if err != nil {
+		panic("NewRandomG failed")
+	}
+
+	g5000, err = NewRandomG(5000, connectedness)
 	if err != nil {
 		panic("NewRandomG failed")
 	}
@@ -83,6 +88,13 @@ func BenchmarkFW500(b *testing.B) {
 
 func BenchmarkFW1000(b *testing.B) {
 	g := g1000
+	for i := 0; i < b.N; i++ {
+		result = g.AllPairsShortestPaths()
+	}
+}
+
+func BenchmarkFW5000(b *testing.B) {
+	g := g5000
 	for i := 0; i < b.N; i++ {
 		result = g.AllPairsShortestPaths()
 	}
